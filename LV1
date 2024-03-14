@@ -1,0 +1,94 @@
+#1.zad
+print('Radni sati: ')
+radniSati = int(input())
+print('eura/h: ')
+euroPoSatu = float(input())
+
+zarada = radniSati*euroPoSatu
+print('Ukupno: ', zarada, ' eura')
+
+def total_euro(radniSati, euroPoSatu):
+    print('Ukupno: ',float(radniSati*euroPoSatu), ' eura')
+
+total_euro(radniSati, euroPoSatu)
+
+#2.zad
+try:
+    print('Unesi ocjenu izmedu 0.0 i 1.0: ')
+    broj = float(input())
+
+    # ocjena = {1:'F', 2:'D', 3:'C', 4:'B', 5:'A'}
+    # for i in range(6):
+    #     if(broj*10 == i):
+    #         print(ocjena[i])
+
+    if 0.0 <= broj <= 1.0:
+        if broj >= 0.9:
+            print('A')
+        elif broj >= 0.8:
+            print('B')
+        elif broj >= 0.7:
+            print('C')
+        elif broj >= 0.6:
+            print('D')
+        else:
+            print('F')
+    else:
+        print('Greska! Unesena ocjena izvan intervala.')
+except ValueError:
+    print('Unos nije broj!')
+
+#3.zad
+brojevi = []
+
+while True:
+    unos = input('Unesi broj ("Done" oznacuje kraj unosa)\n')
+    if(unos == 'Done'):
+        break
+    try:
+        broj = float(unos)
+        brojevi.append(broj)
+    except ValueError:
+        print('Greska! Unos nije broj.')
+
+if brojevi: #ako polje brojeva nije prazno
+    print('Uneseno brojeva: ', len(brojevi))
+    print('Srednja vrijednost: ', sum(brojevi)/len(brojevi))
+    print('Minimalna vrijednost: ', min(brojevi))
+    print('Maksimalna vrijednost: ', max(brojevi))
+
+    brojevi.sort()
+    print(brojevi)
+else:
+    print('Greska! Nije unesen broj')
+
+#4.zad
+def izracunaj_srj_spam_confidence(ime_fajla):
+    try:
+        file = open('mbox.txt', 'r')
+        total_confidence = 0
+        brojac = 0
+        count = 0
+        for line in file: 
+            if line.startswith('X-DSPAM-Confidence: '):
+                trazi = line.find(':')
+                confidence = float(line[trazi+1:].strip())
+                total_confidence+=confidence
+                brojac += 1
+        if brojac > 0 : 
+            srj_confidence = total_confidence / count
+            print("srednja X-DSPAM-Confidence: ", srj_confidence)
+        else:
+            print("nema 'X-DSPAM-Confidence:' ") 
+    except FileNotFoundError:
+        print("file nije pronadjen") 
+    except Exception as e:
+        print("doslo je do errora:", e)
+    finally:
+        try:
+            file.close()
+        except:
+            pass                       
+
+ime_fajla = input("ime datoteke: ")
+izracunaj_srj_spam_confidence(ime_fajla)
