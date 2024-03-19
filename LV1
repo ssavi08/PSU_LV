@@ -63,32 +63,83 @@ else:
     print('Greska! Nije unesen broj')
 
 #4.zad
-def izracunaj_srj_spam_confidence(ime_fajla):
-    try:
-        file = open('mbox.txt', 'r')
-        total_confidence = 0
-        brojac = 0
-        count = 0
-        for line in file: 
-            if line.startswith('X-DSPAM-Confidence: '):
-                trazi = line.find(':')
-                confidence = float(line[trazi+1:].strip())
-                total_confidence+=confidence
-                brojac += 1
-        if brojac > 0 : 
-            srj_confidence = total_confidence / count
-            print("srednja X-DSPAM-Confidence: ", srj_confidence)
-        else:
-            print("nema 'X-DSPAM-Confidence:' ") 
-    except FileNotFoundError:
-        print("file nije pronadjen") 
-    except Exception as e:
-        print("doslo je do errora:", e)
-    finally:
-        try:
-            file.close()
-        except:
-            pass                       
+ime_datoteke = input("Ime datoteke: ")
 
-ime_fajla = input("ime datoteke: ")
-izracunaj_srj_spam_confidence(ime_fajla)
+try:
+    datoteka = open(ime_datoteke)
+except:
+    print("Ne mogu otvoriti datoteku:", ime_datoteke)
+    quit()
+
+suma = 0
+brojac = 0
+
+for linija in datoteka:
+    if linija.startswith("X-DSPAM-Confidence:"):
+        pocetak = linija.find(":")
+        broj = float(linija[pocetak+1:])
+        suma += broj
+        brojac += 1
+
+if brojac > 0:
+    prosjek = suma / brojac
+    print("Average X-DSPAM-Confidence:", prosjek)
+else:
+    print("Nema linija oblika 'X-DSPAM-Confidence:' u datoteci.")
+
+#5.zad
+fopen = open('song.txt')
+
+rijeci = {}
+
+for linija in fopen:
+    linija = linija.split(" ") 
+    for rijec in linija:
+        rijec = rijec.rstrip('\n').replace(",", "")
+        
+        if rijec.lower() in rijeci:
+            rijeci[rijec.lower()] += 1
+        else:
+            rijeci[rijec.lower()] = 1
+
+print(rijeci)
+br = 0
+for x in rijeci:
+    if rijeci.get(x) == 1:
+        br =  br + 1
+
+print(f"{br} rijeci se ponavlja jedanput")
+
+6.zad
+with open('SMSSpamCollection.txt', 'r') as f:
+    linije = f.readlines()
+
+hamRijeci = 0
+hamPoruka = 0
+spamRijeci = 0
+spamPoruka = 0
+spamUsklicnik = 0
+
+for linija in linije:
+    parts = linija.split('\t')
+    prviDio = parts[0]
+    drugiDio = parts[1]
+    rijec = drugiDio.split()
+
+    if prviDio == 'ham':
+        hamRijeci += len(rijec)
+        hamPoruka += 1
+    elif prviDio == 'spam':
+        spamRijeci += len(rijec)
+        spamPoruka += 1
+    elif drugiDio.endswith('!'):
+        print(drugiDio)
+        spamUsklicnik += 1
+
+
+srednjaHamVrijednost = hamRijeci / hamPoruka
+srednjaSpamVrijednost = spamRijeci / spamPoruka
+
+print(f"Prosječan broj riječi u ham porukama: {srednjaHamVrijednost:.2f}")
+print(f"Prosječan broj riječi u spam porukama: {srednjaSpamVrijednost:.2f}")
+print(f"Broj spam poruka koje završavaju uskličnikom: {spamUsklicnik}")
